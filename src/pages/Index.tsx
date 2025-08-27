@@ -6,12 +6,16 @@ import { NotesPanel } from "@/components/NotesPanel";
 import { AIImageGenerator } from "@/components/AIImageGenerator";
 import { MicrophoneTool } from "@/components/MicrophoneTool";
 import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Moon, Sun } from "lucide-react";
+import { useTheme } from "next-themes";
 
 const Index = () => {
   const [currentTool, setCurrentTool] = useState<'pen' | 'eraser' | 'shapes' | 'mic'>('pen');
   const [transcribedText, setTranscribedText] = useState<string>('');
   const [notes, setNotes] = useState<string[]>([]);
   const [generatedImages, setGeneratedImages] = useState<string[]>([]);
+  const { theme, setTheme } = useTheme();
 
   const handleSpeechResult = (text: string) => {
     setTranscribedText(text);
@@ -40,8 +44,19 @@ const Index = () => {
               <p className="text-muted-foreground text-sm">Interactive AI-Powered Classroom</p>
             </div>
           </div>
-          
-          <SpeechToText onSpeechResult={handleSpeechResult} />
+          <div className="flex items-center gap-4">
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+              className="relative"
+            >
+              <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+              <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+              <span className="sr-only">Toggle theme</span>
+            </Button>
+            <SpeechToText onSpeechResult={handleSpeechResult} />
+          </div>
         </div>
       </header>
 

@@ -70,14 +70,61 @@
   }
 
   .dark {
-    /* Keep dark mode simple for now */
-    --background: 215 25% 8%;
-    --foreground: 0 0% 95%;
-    --card: 215 25% 10%;
-    --card-foreground: 0 0% 95%;
-    --primary: 217 91% 65%;
-    --accent: 142 76% 40%;
-    --border: 215 25% 18%;
+    /* Black theme with high contrast */
+    --background: 0 0% 3%;
+    --foreground: 0 0% 98%;
+
+    /* Cards with subtle elevation */
+    --card: 0 0% 8%;
+    --card-foreground: 0 0% 98%;
+
+    --popover: 0 0% 8%;
+    --popover-foreground: 0 0% 98%;
+
+    /* Bright primary for black backgrounds */
+    --primary: 217 91% 70%;
+    --primary-foreground: 0 0% 5%;
+    --primary-hover: 217 91% 75%;
+
+    /* Subtle secondary */
+    --secondary: 0 0% 12%;
+    --secondary-foreground: 0 0% 90%;
+
+    /* Muted elements */
+    --muted: 0 0% 10%;
+    --muted-foreground: 0 0% 65%;
+
+    /* Vibrant accent on black */
+    --accent: 142 76% 45%;
+    --accent-foreground: 0 0% 5%;
+
+    /* Warm highlight */
+    --highlight: 25 95% 58%;
+    --highlight-foreground: 0 0% 5%;
+
+    /* Canvas and tools */
+    --canvas: 0 0% 6%;
+    --canvas-grid: 0 0% 15%;
+    --tool-active: 217 91% 70%;
+    --tool-inactive: 0 0% 50%;
+
+    --destructive: 0 84% 65%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 0 0% 15%;
+    --input: 0 0% 8%;
+    --ring: 217 91% 70%;
+
+    /* Enhanced gradients for black theme */
+    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(217 91% 75%));
+    --gradient-accent: linear-gradient(135deg, hsl(var(--accent)), hsl(142 76% 50%));
+    --gradient-highlight: linear-gradient(135deg, hsl(var(--highlight)), hsl(25 95% 63%));
+    --gradient-canvas: linear-gradient(180deg, hsl(var(--canvas)), hsl(0 0% 4%));
+
+    /* Glowing shadows for black theme */
+    --shadow-soft: 0 2px 8px -2px hsl(0 0% 0% / 0.3);
+    --shadow-medium: 0 4px 16px -4px hsl(0 0% 0% / 0.4);
+    --shadow-strong: 0 8px 32px -8px hsl(0 0% 0% / 0.5);
   }
 }
 
