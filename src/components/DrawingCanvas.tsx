@@ -4,7 +4,7 @@ import { RotateCcw, Download } from "lucide-react";
 import { toast } from "sonner";
 
 interface DrawingCanvasProps {
-  currentTool: 'pen' | 'eraser' | 'shapes';
+  currentTool: 'pen' | 'eraser' | 'shapes' | 'mic';
   className?: string;
 }
 

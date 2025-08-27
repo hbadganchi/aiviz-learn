@@ -4,10 +4,11 @@ import { DrawingCanvas } from "@/components/DrawingCanvas";
 import { ToolboxPanel } from "@/components/ToolboxPanel";
 import { NotesPanel } from "@/components/NotesPanel";
 import { AIImageGenerator } from "@/components/AIImageGenerator";
+import { MicrophoneTool } from "@/components/MicrophoneTool";
 import { Card } from "@/components/ui/card";
 
 const Index = () => {
-  const [currentTool, setCurrentTool] = useState<'pen' | 'eraser' | 'shapes'>('pen');
+  const [currentTool, setCurrentTool] = useState<'pen' | 'eraser' | 'shapes' | 'mic'>('pen');
   const [transcribedText, setTranscribedText] = useState<string>('');
   const [notes, setNotes] = useState<string[]>([]);
   const [generatedImages, setGeneratedImages] = useState<string[]>([]);
@@ -57,10 +58,17 @@ const Index = () => {
           {/* Main Canvas Area */}
           <div className="col-span-7">
             <Card className="h-full shadow-medium overflow-hidden">
-              <DrawingCanvas 
-                currentTool={currentTool}
-                className="w-full h-full"
-              />
+              {currentTool === 'mic' ? (
+                <MicrophoneTool 
+                  onTranscriptChange={handleSpeechResult}
+                  className="w-full h-full"
+                />
+              ) : (
+                <DrawingCanvas 
+                  currentTool={currentTool}
+                  className="w-full h-full"
+                />
+              )}
             </Card>
           </div>
 

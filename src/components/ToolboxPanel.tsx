@@ -10,12 +10,13 @@ import {
   Type,
   Highlighter,
   Ruler,
-  Move
+  Move,
+  Mic
 } from "lucide-react";
 
 interface ToolboxPanelProps {
-  currentTool: 'pen' | 'eraser' | 'shapes';
-  onToolChange: (tool: 'pen' | 'eraser' | 'shapes') => void;
+  currentTool: 'pen' | 'eraser' | 'shapes' | 'mic';
+  onToolChange: (tool: 'pen' | 'eraser' | 'shapes' | 'mic') => void;
 }
 
 export const ToolboxPanel = ({ currentTool, onToolChange }: ToolboxPanelProps) => {
@@ -37,6 +38,12 @@ export const ToolboxPanel = ({ currentTool, onToolChange }: ToolboxPanelProps) =
       name: 'Shapes',
       icon: Square,
       description: 'Draw shapes'
+    },
+    {
+      id: 'mic' as const,
+      name: 'Voice Tool',
+      icon: Mic,
+      description: 'Audio recording & speech'
     }
   ];
 
