@@ -85,23 +85,17 @@ const Index = () => {
                 />
               )}
               
-              {/* Speech-to-Text Overlay */}
-              {transcribedText && (
-                <div className="absolute inset-4 pointer-events-none">
-                  <Card className="p-6 bg-card/95 backdrop-blur-sm border-2 border-primary/20 shadow-glow max-w-2xl">
-                    <div className="flex items-start gap-3">
-                      <div className="w-3 h-3 bg-gradient-primary rounded-full animate-pulse flex-shrink-0 mt-1.5"></div>
-                      <div>
-                        <h3 className="text-lg font-semibold text-foreground mb-2">Live Transcription</h3>
-                        <p className="text-foreground/90 text-base leading-relaxed font-medium">
-                          "{transcribedText}"
-                        </p>
-                        <p className="text-muted-foreground text-sm mt-2">
-                          {new Date().toLocaleTimeString()}
-                        </p>
-                      </div>
-                    </div>
-                  </Card>
+              {/* Speech-to-Text Direct Display */}
+              {transcribedText && currentTool !== 'mic' && (
+                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                  <div className="text-center max-w-4xl px-8">
+                    <p className="text-4xl font-bold text-foreground leading-relaxed">
+                      {transcribedText}
+                    </p>
+                    <p className="text-muted-foreground text-lg mt-4">
+                      {new Date().toLocaleTimeString()}
+                    </p>
+                  </div>
                 </div>
               )}
             </Card>
