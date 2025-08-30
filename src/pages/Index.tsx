@@ -104,22 +104,24 @@ const Index = () => {
           </div>
 
           {/* Right Sidebar - AI & Notes */}
-          <div className="col-span-3 space-y-4">
-            <BooksPanel className="h-64" />
-            
-            <AccessoriesPanel className="h-48" />
-            
-            <AIImageGenerator 
-              speechText={transcribedText}
-              onImageGenerated={handleImageGenerated}
-              generatedImages={generatedImages}
-            />
-            
-            <NotesPanel 
-              notes={notes}
-              onNotesChange={setNotes}
-              transcribedText={transcribedText}
-            />
+          <div className="col-span-3 flex flex-col h-full">
+            <div className="flex-1 overflow-y-auto space-y-4 pr-2">
+              <BooksPanel className="flex-shrink-0" />
+              
+              <AccessoriesPanel className="flex-shrink-0" />
+              
+              <AIImageGenerator 
+                speechText={transcribedText}
+                onImageGenerated={handleImageGenerated}
+                generatedImages={generatedImages}
+              />
+              
+              <NotesPanel 
+                notes={notes}
+                onNotesChange={setNotes}
+                transcribedText={transcribedText}
+              />
+            </div>
           </div>
         </div>
       </div>
