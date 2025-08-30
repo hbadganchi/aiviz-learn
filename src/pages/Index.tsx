@@ -2,11 +2,8 @@ import { useState } from "react";
 import { SpeechToText } from "@/components/SpeechToText";
 import { DrawingCanvas } from "@/components/DrawingCanvas";
 import { ToolboxPanel } from "@/components/ToolboxPanel";
-import { NotesPanel } from "@/components/NotesPanel";
-import { AIImageGenerator } from "@/components/AIImageGenerator";
 import { MicrophoneTool } from "@/components/MicrophoneTool";
-import { BooksPanel } from "@/components/BooksPanel";
-import { AccessoriesPanel } from "@/components/AccessoriesPanel";
+import { UnifiedToolsPanel } from "@/components/UnifiedToolsPanel";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Moon, Sun } from "lucide-react";
@@ -103,25 +100,15 @@ const Index = () => {
             </Card>
           </div>
 
-          {/* Right Sidebar - AI & Notes */}
-          <div className="col-span-3 flex flex-col h-full">
-            <div className="flex-1 overflow-y-auto space-y-4 pr-2">
-              <BooksPanel className="flex-shrink-0" />
-              
-              <AccessoriesPanel className="flex-shrink-0" />
-              
-              <AIImageGenerator 
-                speechText={transcribedText}
-                onImageGenerated={handleImageGenerated}
-                generatedImages={generatedImages}
-              />
-              
-              <NotesPanel 
-                notes={notes}
-                onNotesChange={setNotes}
-                transcribedText={transcribedText}
-              />
-            </div>
+          {/* Right Sidebar - Unified Tools */}
+          <div className="col-span-3">
+            <UnifiedToolsPanel
+              transcribedText={transcribedText}
+              notes={notes}
+              onNotesChange={setNotes}
+              generatedImages={generatedImages}
+              onImageGenerated={handleImageGenerated}
+            />
           </div>
         </div>
       </div>
