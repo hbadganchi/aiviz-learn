@@ -1,8 +1,11 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 import { 
   BookOpen, 
   Calculator, 
@@ -13,7 +16,9 @@ import {
   Music,
   Heart,
   Plus,
-  ChevronRight
+  ChevronRight,
+  Upload,
+  Download
 } from "lucide-react";
 
 interface Subject {
@@ -30,6 +35,9 @@ interface BooksPanelProps {
 
 export const BooksPanel = ({ className }: BooksPanelProps) => {
   const [selectedSubject, setSelectedSubject] = useState<string | null>(null);
+  const [uploading, setUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const { toast } = useToast();
   
   const subjects: Subject[] = [
     { id: 'math', name: 'Mathematics', icon: Calculator, color: 'bg-blue-500', count: 12 },
@@ -40,6 +48,66 @@ export const BooksPanel = ({ className }: BooksPanelProps) => {
     { id: 'music', name: 'Music', icon: Music, color: 'bg-pink-500', count: 3 },
     { id: 'health', name: 'Health', icon: Heart, color: 'bg-orange-500', count: 5 }
   ];
+
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    // Check file type
+    const allowedTypes = ['application/pdf', 'application/epub+zip', 'text/plain'];
+    if (!allowedTypes.includes(file.type)) {
+      toast({
+        title: "Invalid file type",
+        description: "Please upload PDF, EPUB, or TXT files only.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setUploading(true);
+    try {
+      const fileName = `${selectedSubject}/${Date.now()}_${file.name}`;
+      const { data, error } = await supabase.storage
+        .from('books')
+        .upload(fileName, file);
+
+      if (error) throw error;
+
+      toast({
+        title: "Book uploaded successfully",
+        description: `${file.name} has been added to your library.`,
+      });
+    } catch (error) {
+      console.error('Upload error:', error);
+      toast({
+        title: "Upload failed",
+        description: "There was an error uploading your book.",
+        variant: "destructive",
+      });
+    } finally {
+      setUploading(false);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+    }
+  };
+
+  const handleDownload = async (bookTitle: string) => {
+    try {
+      // This is a mock implementation - in real app, you'd have actual file paths
+      toast({
+        title: "Download started",
+        description: `Downloading ${bookTitle}...`,
+      });
+    } catch (error) {
+      console.error('Download error:', error);
+      toast({
+        title: "Download failed",
+        description: "There was an error downloading the book.",
+        variant: "destructive",
+      });
+    }
+  };
 
   const books = {
     math: [
@@ -69,9 +137,20 @@ export const BooksPanel = ({ className }: BooksPanelProps) => {
               <p className="text-xs text-muted-foreground">Organize by subjects</p>
             </div>
           </div>
-          <Button variant="outline" size="sm" className="interactive">
-            <Plus className="w-4 h-4" />
-          </Button>
+          <div className="flex gap-2">
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="interactive"
+              onClick={() => fileInputRef.current?.click()}
+              disabled={!selectedSubject || uploading}
+            >
+              <Upload className="w-4 h-4" />
+            </Button>
+            <Button variant="outline" size="sm" className="interactive">
+              <Plus className="w-4 h-4" />
+            </Button>
+          </div>
         </div>
 
         <Separator />
@@ -125,16 +204,26 @@ export const BooksPanel = ({ className }: BooksPanelProps) => {
               </h4>
               
               {books[selectedSubject as keyof typeof books]?.map((book, index) => (
-                <Card key={index} className="p-3 bg-muted/50 hover:bg-muted/70 transition-colors cursor-pointer">
+                <Card key={index} className="p-3 bg-muted/50 hover:bg-muted/70 transition-colors">
                   <div className="space-y-2">
                     <div className="flex items-start justify-between">
-                      <div>
+                      <div className="flex-1">
                         <p className="text-sm font-medium">{book.title}</p>
                         <p className="text-xs text-muted-foreground">{book.pages} pages</p>
                       </div>
-                      <Badge variant="secondary" className="text-xs">
-                        {book.progress}%
-                      </Badge>
+                      <div className="flex items-center gap-2">
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          onClick={() => handleDownload(book.title)}
+                          className="h-8 w-8 p-0"
+                        >
+                          <Download className="w-3 h-3" />
+                        </Button>
+                        <Badge variant="secondary" className="text-xs">
+                          {book.progress}%
+                        </Badge>
+                      </div>
                     </div>
                     <div className="w-full bg-muted rounded-full h-1.5">
                       <div 
@@ -152,6 +241,14 @@ export const BooksPanel = ({ className }: BooksPanelProps) => {
             </div>
           </div>
         )}
+        
+        <Input
+          ref={fileInputRef}
+          type="file"
+          accept=".pdf,.epub,.txt"
+          onChange={handleFileUpload}
+          className="hidden"
+        />
       </div>
     </Card>
   );
