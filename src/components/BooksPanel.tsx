@@ -75,9 +75,10 @@ interface SearchFilters {
 
 interface BooksPanelProps {
   className?: string;
+  readOnly?: boolean;
 }
 
-export const BooksPanel = ({ className }: BooksPanelProps) => {
+export const BooksPanel = ({ className, readOnly = false }: BooksPanelProps) => {
   const [selectedSubject, setSelectedSubject] = useState<string | null>(null);
   const [notes, setNotes] = useState<Note[]>([]);
   const [subjects, setSubjects] = useState<Subject[]>([]);
@@ -564,10 +565,10 @@ export const BooksPanel = ({ className }: BooksPanelProps) => {
   return (
     <div className={`space-y-4 ${className}`}>
       {/* Main Panel */}
-      <Card className={`shadow-elegant transition-all duration-300 ${dragActive ? 'border-primary bg-primary/5' : ''}`}
-            onDragOver={handleDragOver}
-            onDragLeave={handleDragLeave}
-            onDrop={handleDrop}>
+      <Card className={`shadow-elegant transition-all duration-300 ${dragActive && !readOnly ? 'border-primary bg-primary/5' : ''}`}
+            onDragOver={!readOnly ? handleDragOver : undefined}
+            onDragLeave={!readOnly ? handleDragLeave : undefined}
+            onDrop={!readOnly ? handleDrop : undefined}>
         <div className="p-4 space-y-4">
           {/* Header */}
           <div className="flex items-center justify-between">
@@ -578,7 +579,7 @@ export const BooksPanel = ({ className }: BooksPanelProps) => {
               <div>
                 <h3 className="font-semibold text-foreground">Books Lab</h3>
                 <p className="text-xs text-muted-foreground">
-                  {notes.length} notes • Drag & drop to upload
+                  {notes.length} notes{!readOnly ? ' • Drag & drop to upload' : ' • Read-only access'}
                 </p>
               </div>
             </div>
@@ -592,14 +593,16 @@ export const BooksPanel = ({ className }: BooksPanelProps) => {
                   <Grid className="w-4 h-4" />
                 </Button>
               )}
-              <Button 
-                variant="outline" 
-                size="sm"
-                onClick={() => setShowUploadDialog(true)}
-                disabled={uploading}
-              >
-                <Upload className="w-4 h-4" />
-              </Button>
+              {!readOnly && (
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => setShowUploadDialog(true)}
+                  disabled={uploading}
+                >
+                  <Upload className="w-4 h-4" />
+                </Button>
+              )}
               {viewMode !== 'subjects' && (
                 <Button 
                   variant="outline" 
@@ -633,7 +636,7 @@ export const BooksPanel = ({ className }: BooksPanelProps) => {
             />
           )}
 
-          {dragActive && (
+          {dragActive && !readOnly && (
             <div className="absolute inset-0 bg-primary/10 rounded-lg flex items-center justify-center pointer-events-none">
               <div className="text-center space-y-2">
                 <Move className="w-12 h-12 mx-auto text-primary" />
@@ -653,90 +656,94 @@ export const BooksPanel = ({ className }: BooksPanelProps) => {
       )}
 
       {/* Upload Dialog */}
-      <Dialog open={showUploadDialog} onOpenChange={setShowUploadDialog}>
-        <DialogContent className="max-w-md">
-          <DialogHeader>
-            <DialogTitle>Upload Note</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <label className="text-sm font-medium">Title *</label>
-              <Input
-                value={uploadingNote.title}
-                onChange={(e) => setUploadingNote(prev => ({ ...prev, title: e.target.value }))}
-                placeholder="Enter note title..."
+      {!readOnly && (
+        <Dialog open={showUploadDialog} onOpenChange={setShowUploadDialog}>
+          <DialogContent className="max-w-md">
+            <DialogHeader>
+              <DialogTitle>Upload Note</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Title *</label>
+                <Input
+                  value={uploadingNote.title}
+                  onChange={(e) => setUploadingNote(prev => ({ ...prev, title: e.target.value }))}
+                  placeholder="Enter note title..."
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Description</label>
+                <Textarea
+                  value={uploadingNote.description}
+                  onChange={(e) => setUploadingNote(prev => ({ ...prev, description: e.target.value }))}
+                  placeholder="Brief description..."
+                  className="min-h-[80px]"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Subject</label>
+                <select 
+                  className="w-full px-3 py-2 rounded-md border border-input bg-background"
+                  value={selectedSubject || ''}
+                  onChange={(e) => setSelectedSubject(e.target.value)}
+                >
+                  <option value="">Select subject...</option>
+                  {subjects.map(subject => (
+                    <option key={subject.id} value={subject.id}>{subject.name}</option>
+                  ))}
+                </select>
+              </div>
+
+              <TagManager
+                tags={uploadingNote.tags || []}
+                onTagsChange={(tags) => setUploadingNote(prev => ({ ...prev, tags }))}
+                placeholder="Add tags..."
               />
-            </div>
-            
-            <div className="space-y-2">
-              <label className="text-sm font-medium">Description</label>
-              <Textarea
-                value={uploadingNote.description}
-                onChange={(e) => setUploadingNote(prev => ({ ...prev, description: e.target.value }))}
-                placeholder="Brief description..."
-                className="min-h-[80px]"
-              />
-            </div>
 
-            <div className="space-y-2">
-              <label className="text-sm font-medium">Subject</label>
-              <select 
-                className="w-full px-3 py-2 rounded-md border border-input bg-background"
-                value={selectedSubject || ''}
-                onChange={(e) => setSelectedSubject(e.target.value)}
-              >
-                <option value="">Select subject...</option>
-                {subjects.map(subject => (
-                  <option key={subject.id} value={subject.id}>{subject.name}</option>
-                ))}
-              </select>
+              <div className="space-y-2">
+                <Button
+                  variant="outline"
+                  onClick={() => fileInputRef.current?.click()}
+                  className="w-full"
+                  disabled={uploading}
+                >
+                  <Upload className="w-4 h-4 mr-2" />
+                  {uploading ? 'Uploading...' : 'Choose File'}
+                </Button>
+              </div>
+
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  onClick={() => setShowUploadDialog(false)}
+                  className="flex-1"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={!uploadingNote.title || !selectedSubject || uploading}
+                  className="flex-1"
+                >
+                  Upload
+                </Button>
+              </div>
             </div>
+          </DialogContent>
+        </Dialog>
+      )}
 
-            <TagManager
-              tags={uploadingNote.tags || []}
-              onTagsChange={(tags) => setUploadingNote(prev => ({ ...prev, tags }))}
-              placeholder="Add tags..."
-            />
-
-            <div className="space-y-2">
-              <Button
-                variant="outline"
-                onClick={() => fileInputRef.current?.click()}
-                className="w-full"
-                disabled={uploading}
-              >
-                <Upload className="w-4 h-4 mr-2" />
-                {uploading ? 'Uploading...' : 'Choose File'}
-              </Button>
-            </div>
-
-            <div className="flex gap-2">
-              <Button
-                variant="outline"
-                onClick={() => setShowUploadDialog(false)}
-                className="flex-1"
-              >
-                Cancel
-              </Button>
-              <Button
-                onClick={() => fileInputRef.current?.click()}
-                disabled={!uploadingNote.title || !selectedSubject || uploading}
-                className="flex-1"
-              >
-                Upload
-              </Button>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
-
-      <Input
-        ref={fileInputRef}
-        type="file"
-        accept=".pdf,.epub,.txt,.jpg,.jpeg,.png,.gif,.doc,.docx"
-        onChange={(e) => e.target.files && handleFileUpload(e.target.files)}
-        className="hidden"
-      />
+      {!readOnly && (
+        <Input
+          ref={fileInputRef}
+          type="file"
+          accept=".pdf,.epub,.txt,.jpg,.jpeg,.png,.gif,.doc,.docx"
+          onChange={(e) => e.target.files && handleFileUpload(e.target.files)}
+          className="hidden"
+        />
+      )}
     </div>
   );
 };

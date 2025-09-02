@@ -17,6 +17,7 @@ export type Database = {
       notes: {
         Row: {
           ai_summary: string | null
+          author_role: string | null
           content_preview: string | null
           created_at: string
           description: string | null
@@ -36,6 +37,7 @@ export type Database = {
         }
         Insert: {
           ai_summary?: string | null
+          author_role?: string | null
           content_preview?: string | null
           created_at?: string
           description?: string | null
@@ -55,6 +57,7 @@ export type Database = {
         }
         Update: {
           ai_summary?: string | null
+          author_role?: string | null
           content_preview?: string | null
           created_at?: string
           description?: string | null
@@ -70,6 +73,36 @@ export type Database = {
           title?: string
           updated_at?: string
           upload_date?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          email: string
+          full_name: string | null
+          id: string
+          role: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          full_name?: string | null
+          id?: string
+          role: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          full_name?: string | null
+          id?: string
+          role?: string
+          updated_at?: string
           user_id?: string
         }
         Relationships: []
