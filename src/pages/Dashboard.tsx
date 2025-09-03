@@ -1,4 +1,4 @@
-import { Navigate } from 'react-router-dom';
+import { Navigate, Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -66,6 +66,14 @@ const Dashboard = () => {
                 <Badge variant="outline" className="text-orange-600 border-orange-200">
                   Read-only mode
                 </Badge>
+              )}
+              {isTeacher && (
+                <Link to="/teacher">
+                  <Button variant="outline" size="sm">
+                    <Users className="h-4 w-4 mr-2" />
+                    Teacher Interface
+                  </Button>
+                </Link>
               )}
             </div>
             <div className="flex items-center space-x-4">
