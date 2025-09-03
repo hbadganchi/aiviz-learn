@@ -31,11 +31,14 @@ const Dashboard = () => {
     );
   }
 
-  if (!user || !profile) {
+  if (!user) {
     return <Navigate to="/auth" replace />;
   }
 
-  const isTeacher = profile.role === 'teacher';
+  // If user exists but no profile, assume student role for now
+  const userRole = profile?.role || 'student';
+
+  const isTeacher = userRole === 'teacher';
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
@@ -67,7 +70,7 @@ const Dashboard = () => {
             </div>
             <div className="flex items-center space-x-4">
               <span className="text-sm text-muted-foreground">
-                {profile.full_name || user.email}
+                {profile?.full_name || user.email}
               </span>
               <Button variant="outline" size="sm" onClick={signOut}>
                 <LogOut className="h-4 w-4 mr-2" />

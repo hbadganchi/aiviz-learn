@@ -50,7 +50,16 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         .eq('user_id', userId)
         .single();
 
-      if (error) throw error;
+      if (error) {
+        // If profile doesn't exist, we'll let the dashboard handle it
+        // But still set profile to null so user can access the app
+        if (error.code === 'PGRST116') {
+          console.log('Profile not found for user, they may need to complete setup');
+          setProfile(null);
+          return;
+        }
+        throw error;
+      }
       setProfile(data as Profile);
     } catch (error) {
       console.error('Error fetching profile:', error);
