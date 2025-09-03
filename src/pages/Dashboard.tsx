@@ -2,16 +2,7 @@ import { Navigate, Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { 
-  BookOpen, 
-  MessageSquare, 
-  Calculator, 
-  Box, 
-  LogOut, 
-  GraduationCap,
-  Users,
-  Hash
-} from 'lucide-react';
+import { BookOpen, MessageSquare, Calculator, Box, LogOut, GraduationCap, Users, Hash } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { BooksPanel } from '@/components/BooksPanel';
 import { AIWordHelper } from '@/components/AIWordHelper';
@@ -19,29 +10,26 @@ import { ScientificCalculator } from '@/components/ScientificCalculator';
 import { QuadraticSolver } from '@/components/QuadraticSolver';
 import { GeometryViewer } from '@/components/GeometryViewer';
 import { LogTable } from '@/components/LogTable';
-
 const Dashboard = () => {
-  const { user, profile, loading, signOut } = useAuth();
-
+  const {
+    user,
+    profile,
+    loading,
+    signOut
+  } = useAuth();
   if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
+    return <div className="min-h-screen flex items-center justify-center">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-      </div>
-    );
+      </div>;
   }
-
   if (!user) {
     return <Navigate to="/auth" replace />;
   }
 
   // If user exists but no profile, assume student role for now
   const userRole = profile?.role || 'student';
-
   const isTeacher = userRole === 'teacher';
-
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
+  return <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
       {/* Header */}
       <header className="bg-white border-b shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -50,31 +38,23 @@ const Dashboard = () => {
               <GraduationCap className="h-8 w-8 text-primary" />
               <h1 className="text-xl font-bold">School Portal</h1>
               <Badge variant={isTeacher ? 'default' : 'secondary'}>
-                {isTeacher ? (
-                  <>
+                {isTeacher ? <>
                     <Users className="h-3 w-3 mr-1" />
                     Teacher
-                  </>
-                ) : (
-                  <>
+                  </> : <>
                     <GraduationCap className="h-3 w-3 mr-1" />
                     Student
-                  </>
-                )}
+                  </>}
               </Badge>
-              {!isTeacher && (
-                <Badge variant="outline" className="text-orange-600 border-orange-200">
+              {!isTeacher && <Badge variant="outline" className="text-orange-600 border-orange-200">
                   Read-only mode
-                </Badge>
-              )}
-              {isTeacher && (
-                <Link to="/teacher">
+                </Badge>}
+              {isTeacher && <Link to="/teacher">
                   <Button variant="outline" size="sm">
                     <Users className="h-4 w-4 mr-2" />
                     Teacher Interface
                   </Button>
-                </Link>
-              )}
+                </Link>}
             </div>
             <div className="flex items-center space-x-4">
               <span className="text-sm text-muted-foreground">
@@ -100,17 +80,11 @@ const Dashboard = () => {
                 Books Lab
               </CardTitle>
               <CardDescription>
-                {isTeacher 
-                  ? 'Upload and manage educational materials' 
-                  : 'Access educational materials uploaded by teachers'
-                }
+                {isTeacher ? 'Upload and manage educational materials' : 'Access educational materials uploaded by teachers'}
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <BooksPanel 
-                className="border-0 shadow-none p-0"
-                readOnly={!isTeacher}
-              />
+              <BooksPanel className="border-0 shadow-none p-0" readOnly={!isTeacher} />
             </CardContent>
           </Card>
 
@@ -173,21 +147,9 @@ const Dashboard = () => {
           </Card>
 
           {/* 3D Geometry Viewer */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center text-sm">
-                <Box className="h-4 w-4 mr-2" />
-                3D Geometry
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <GeometryViewer />
-            </CardContent>
-          </Card>
+          
         </div>
       </main>
-    </div>
-  );
+    </div>;
 };
-
 export default Dashboard;
