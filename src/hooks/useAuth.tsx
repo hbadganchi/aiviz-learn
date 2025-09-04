@@ -145,8 +145,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
       if (error) throw error;
 
-      // Create profile
-      if (data.user) {
+      // Create profile immediately after successful signup
+      if (data.user && data.session) {
+        console.log('Creating profile for user:', data.user.id, 'with role:', role);
         const { error: profileError } = await supabase
           .from('profiles')
           .insert({
@@ -156,16 +157,29 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
             full_name: fullName,
           });
 
-        if (profileError) throw profileError;
+        if (profileError) {
+          console.error('Profile creation error:', profileError);
+          throw new Error(`Failed to create profile: ${profileError.message}`);
+        }
+
+        console.log('Profile created successfully');
+        
+        // Fetch the created profile to update state
+        setTimeout(() => {
+          fetchProfile(data.user.id);
+        }, 100);
       }
 
       toast({
         title: "Account created!",
-        description: "Please check your email to verify your account.",
+        description: data.session ? 
+          `Welcome ${role}! You can now access your ${role} interface.` :
+          "Please check your email to verify your account.",
       });
 
       return { error: null };
     } catch (error) {
+      console.error('Signup error:', error);
       toast({
         title: "Sign up failed",
         description: error instanceof Error ? error.message : "An error occurred",
