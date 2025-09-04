@@ -47,7 +47,7 @@ export const GeometryViewer = () => {
         cancelAnimationFrame(animationId);
       }
     };
-  }, [currentShape, rotation, isAnimating]);
+  }, [currentShape, isAnimating]);
 
   const project3DTo2D = (point: Point3D, width: number, height: number): { x: number, y: number } => {
     const distance = 5;
