@@ -17,25 +17,25 @@
     --popover: 0 0% 100%;
     --popover-foreground: 215 25% 15%;
 
-    /* Educational blue primary - trustworthy and professional */
-    --primary: 217 91% 60%;
+    /* Teal primary for educational interface */
+    --primary: 174 77% 47%;
     --primary-foreground: 0 0% 100%;
-    --primary-hover: 217 91% 55%;
+    --primary-hover: 174 77% 42%;
 
-    /* Clean secondary for subtle elements */
-    --secondary: 214 32% 91%;
+    /* Light gray secondary */
+    --secondary: 210 20% 90%;
     --secondary-foreground: 215 25% 15%;
 
-    /* Muted for background elements */
-    --muted: 210 40% 95%;
+    /* Light muted backgrounds */
+    --muted: 210 20% 95%;
     --muted-foreground: 215 16% 47%;
 
-    /* Fresh green accent for success and generation states */
-    --accent: 142 76% 36%;
+    /* Darker teal accent */
+    --accent: 174 100% 29%;
     --accent-foreground: 0 0% 100%;
 
-    /* Warm orange for highlights and active states */
-    --highlight: 25 95% 53%;
+    /* Teal highlight for active states */
+    --highlight: 174 62% 55%;
     --highlight-foreground: 0 0% 100%;
 
     /* Smart board specific colors */
@@ -81,10 +81,10 @@
     --popover: 0 0% 8%;
     --popover-foreground: 0 0% 98%;
 
-    /* Bright primary for black backgrounds */
-    --primary: 217 91% 70%;
+    /* Bright teal primary for dark theme */
+    --primary: 174 77% 60%;
     --primary-foreground: 0 0% 5%;
-    --primary-hover: 217 91% 75%;
+    --primary-hover: 174 77% 65%;
 
     /* Subtle secondary */
     --secondary: 0 0% 12%;
@@ -94,12 +94,12 @@
     --muted: 0 0% 10%;
     --muted-foreground: 0 0% 65%;
 
-    /* Vibrant accent on black */
-    --accent: 142 76% 45%;
+    /* Vibrant teal accent on dark */
+    --accent: 174 100% 35%;
     --accent-foreground: 0 0% 5%;
 
-    /* Warm highlight */
-    --highlight: 25 95% 58%;
+    /* Bright teal highlight */
+    --highlight: 174 62% 65%;
     --highlight-foreground: 0 0% 5%;
 
     /* Canvas and tools */

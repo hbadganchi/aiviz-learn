@@ -19,6 +19,7 @@ import { ScientificCalculator } from '@/components/ScientificCalculator';
 import { QuadraticSolver } from '@/components/QuadraticSolver';
 import { GeometryViewer } from '@/components/GeometryViewer';
 import { LogTable } from '@/components/LogTable';
+import { RoleSwitcher } from '@/components/RoleSwitcher';
 
 const Dashboard = () => {
   const { user, profile, loading, signOut } = useAuth();
@@ -36,50 +37,37 @@ const Dashboard = () => {
   }
 
   // If user exists but no profile, assume student role for now
-  const userRole = profile?.role || 'student';
-
-  const isTeacher = userRole === 'teacher';
+  const currentRole = profile?.active_role || 'student';
+  const isTeacher = currentRole === 'teacher';
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
+    <div className="min-h-screen bg-gradient-to-br from-teal-50 via-white to-gray-50">
       {/* Header */}
       <header className="bg-white border-b shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-4">
               <GraduationCap className="h-8 w-8 text-primary" />
-              <h1 className="text-xl font-bold">School Portal</h1>
+              <h1 className="text-xl font-bold">EduPortal</h1>
               <Badge variant={isTeacher ? 'default' : 'secondary'}>
                 {isTeacher ? (
                   <>
                     <Users className="h-3 w-3 mr-1" />
-                    Teacher
+                    Teacher View
                   </>
                 ) : (
                   <>
                     <GraduationCap className="h-3 w-3 mr-1" />
-                    Student
+                    Student View
                   </>
                 )}
               </Badge>
-              {!isTeacher && (
-                <Badge variant="outline" className="text-orange-600 border-orange-200">
-                  Read-only mode
-                </Badge>
-              )}
-              {isTeacher && (
-                <Link to="/teacher">
-                  <Button variant="outline" size="sm">
-                    <Users className="h-4 w-4 mr-2" />
-                    Teacher Interface
-                  </Button>
-                </Link>
-              )}
             </div>
             <div className="flex items-center space-x-4">
               <span className="text-sm text-muted-foreground">
                 {profile?.full_name || user.email}
               </span>
+              <RoleSwitcher />
               <Button variant="outline" size="sm" onClick={signOut}>
                 <LogOut className="h-4 w-4 mr-2" />
                 Sign Out

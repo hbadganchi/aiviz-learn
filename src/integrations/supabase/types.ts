@@ -79,29 +79,35 @@ export type Database = {
       }
       profiles: {
         Row: {
+          active_role: string | null
+          available_roles: string[] | null
           created_at: string
           email: string
           full_name: string | null
           id: string
-          role: string
+          role: string | null
           updated_at: string
           user_id: string
         }
         Insert: {
+          active_role?: string | null
+          available_roles?: string[] | null
           created_at?: string
           email: string
           full_name?: string | null
           id?: string
-          role: string
+          role?: string | null
           updated_at?: string
           user_id: string
         }
         Update: {
+          active_role?: string | null
+          available_roles?: string[] | null
           created_at?: string
           email?: string
           full_name?: string | null
           id?: string
-          role?: string
+          role?: string | null
           updated_at?: string
           user_id?: string
         }

@@ -13,7 +13,6 @@ import { supabase } from '@/integrations/supabase/client';
 const Auth = () => {
   const { signIn, signUp, user, loading } = useAuth();
   const [isSignUp, setIsSignUp] = useState(false);
-  const [role, setRole] = useState<'student' | 'teacher'>('student');
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -32,7 +31,7 @@ const Auth = () => {
 
     try {
       if (isSignUp) {
-        await signUp(formData.email, formData.password, role, formData.fullName);
+        await signUp(formData.email, formData.password, formData.fullName);
       } else {
         await signIn(formData.email, formData.password);
       }
@@ -168,30 +167,6 @@ const Auth = () => {
             </TabsContent>
             
             <TabsContent value="signup" className="space-y-4">
-              <div className="space-y-3">
-                <Label>Choose your role</Label>
-                <div className="grid grid-cols-2 gap-3">
-                  <Button
-                    type="button"
-                    variant={role === 'student' ? 'default' : 'outline'}
-                    className="h-auto p-4 flex flex-col items-center space-y-2"
-                    onClick={() => setRole('student')}
-                  >
-                    <GraduationCap className="h-6 w-6" />
-                    <span>Student</span>
-                  </Button>
-                  <Button
-                    type="button"
-                    variant={role === 'teacher' ? 'default' : 'outline'}
-                    className="h-auto p-4 flex flex-col items-center space-y-2"
-                    onClick={() => setRole('teacher')}
-                  >
-                    <Users className="h-6 w-6" />
-                    <span>Teacher</span>
-                  </Button>
-                </div>
-              </div>
-              
               <Button 
                 onClick={handleGoogleSignIn} 
                 variant="outline" 
@@ -218,7 +193,7 @@ const Auth = () => {
 
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="signup-fullName">Full Name</Label>
+                  <Label htmlFor="signup-fullName">Full Name (Optional)</Label>
                   <Input
                     id="signup-fullName"
                     name="fullName"
@@ -251,12 +226,15 @@ const Auth = () => {
                     required
                   />
                 </div>
+                <div className="text-sm text-muted-foreground text-center">
+                  You can switch between student and teacher roles after signup
+                </div>
                 <Button 
                   type="submit" 
                   className="w-full" 
                   disabled={submitting}
                 >
-                  {submitting ? 'Creating account...' : `Sign Up as ${role}`}
+                  {submitting ? 'Creating account...' : 'Create Account'}
                 </Button>
               </form>
             </TabsContent>

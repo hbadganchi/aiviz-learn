@@ -36,7 +36,7 @@ const TeacherInterface = () => {
     return <Navigate to="/auth" replace />;
   }
 
-  const userRole = profile?.role || 'student';
+  const currentRole = profile?.active_role || 'student';
 
   // Show loading if still fetching profile for authenticated user
   if (user && !profile && !loading) {
@@ -51,7 +51,7 @@ const TeacherInterface = () => {
   }
 
   // Redirect non-teachers
-  if (userRole !== 'teacher') {
+  if (currentRole !== 'teacher') {
     return <Navigate to="/dashboard" replace />;
   }
 
@@ -78,7 +78,7 @@ const TeacherInterface = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
+    <div className="min-h-screen bg-gradient-to-br from-teal-50 via-white to-gray-50">
       {/* Header */}
       <header className="bg-white border-b shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

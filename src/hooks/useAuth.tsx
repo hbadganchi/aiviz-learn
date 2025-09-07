@@ -7,7 +7,9 @@ interface Profile {
   id: string;
   user_id: string;
   email: string;
-  role: 'student' | 'teacher';
+  role?: 'student' | 'teacher';
+  active_role: 'student' | 'teacher';
+  available_roles: ('student' | 'teacher')[];
   full_name?: string;
 }
 
@@ -17,7 +19,8 @@ interface AuthContextType {
   profile: Profile | null;
   loading: boolean;
   signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
-  signUp: (email: string, password: string, role: 'student' | 'teacher', fullName?: string) => Promise<{ error: Error | null }>;
+  signUp: (email: string, password: string, fullName?: string) => Promise<{ error: Error | null }>;
+  switchRole: (newRole: 'student' | 'teacher') => Promise<{ error: Error | null }>;
   signOut: () => Promise<void>;
 }
 
@@ -127,7 +130,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   };
 
-  const signUp = async (email: string, password: string, role: 'student' | 'teacher', fullName?: string) => {
+  const signUp = async (email: string, password: string, fullName?: string) => {
     try {
       const redirectUrl = `${window.location.origin}/`;
       
@@ -137,7 +140,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         options: {
           emailRedirectTo: redirectUrl,
           data: {
-            role,
             full_name: fullName,
           }
         }
@@ -147,13 +149,14 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
       // Create profile immediately after successful signup
       if (data.user && data.session) {
-        console.log('Creating profile for user:', data.user.id, 'with role:', role);
+        console.log('Creating profile for user:', data.user.id);
         const { error: profileError } = await supabase
           .from('profiles')
           .insert({
             user_id: data.user.id,
             email,
-            role,
+            active_role: 'student',
+            available_roles: ['student', 'teacher'],
             full_name: fullName,
           });
 
@@ -173,7 +176,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       toast({
         title: "Account created!",
         description: data.session ? 
-          `Welcome ${role}! You can now access your ${role} interface.` :
+          "Welcome! You can switch between student and teacher roles anytime." :
           "Please check your email to verify your account.",
       });
 
@@ -205,6 +208,38 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   };
 
+  const switchRole = async (newRole: 'student' | 'teacher') => {
+    if (!user || !profile) {
+      return { error: new Error('User must be logged in to switch roles') };
+    }
+
+    try {
+      const { error } = await supabase
+        .from('profiles')
+        .update({ active_role: newRole })
+        .eq('user_id', user.id);
+
+      if (error) throw error;
+
+      // Update local state
+      setProfile({ ...profile, active_role: newRole });
+      
+      toast({
+        title: "Role switched!",
+        description: `Now viewing as ${newRole}`,
+      });
+
+      return { error: null };
+    } catch (error) {
+      toast({
+        title: "Role switch failed",
+        description: error instanceof Error ? error.message : "An error occurred",
+        variant: "destructive",
+      });
+      return { error: error as Error };
+    }
+  };
+
   const value = {
     user,
     session,
@@ -213,6 +248,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     signIn,
     signUp,
     signOut,
+    switchRole,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
