@@ -67,7 +67,6 @@ const Dashboard = () => {
               <span className="text-sm text-muted-foreground">
                 {profile?.full_name || user.email}
               </span>
-              <RoleSwitcher />
               <Button variant="outline" size="sm" onClick={signOut}>
                 <LogOut className="h-4 w-4 mr-2" />
                 Sign Out
@@ -76,6 +75,13 @@ const Dashboard = () => {
           </div>
         </div>
       </header>
+
+      {/* Role Switcher - Prominent Center Position */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div className="flex justify-center">
+          <RoleSwitcher />
+        </div>
+      </div>
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
