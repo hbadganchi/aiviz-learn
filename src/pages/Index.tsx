@@ -5,6 +5,8 @@ import { ToolboxPanel } from "@/components/ToolboxPanel";
 import { NotesPanel } from "@/components/NotesPanel";
 import { AIImageGenerator } from "@/components/AIImageGenerator";
 import { MicrophoneTool } from "@/components/MicrophoneTool";
+import { BooksPanel } from "@/components/BooksPanel";
+import { AccessoriesPanel } from "@/components/AccessoriesPanel";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Moon, Sun } from "lucide-react";
@@ -103,6 +105,10 @@ const Index = () => {
 
           {/* Right Sidebar - AI & Notes */}
           <div className="col-span-3 space-y-4">
+            <BooksPanel className="h-64" />
+            
+            <AccessoriesPanel className="h-48" />
+            
             <AIImageGenerator 
               speechText={transcribedText}
               onImageGenerated={handleImageGenerated}
