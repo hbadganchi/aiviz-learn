@@ -81,21 +81,8 @@ const Index = () => {
                 <DrawingCanvas 
                   currentTool={currentTool}
                   className="w-full h-full"
+                  transcribedText={transcribedText}
                 />
-              )}
-              
-              {/* Speech-to-Text Direct Display */}
-              {transcribedText && currentTool !== 'mic' && (
-                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                  <div className="text-center max-w-4xl px-8">
-                    <p className="text-4xl font-bold text-foreground leading-relaxed">
-                      {transcribedText}
-                    </p>
-                    <p className="text-muted-foreground text-lg mt-4">
-                      {new Date().toLocaleTimeString()}
-                    </p>
-                  </div>
-                </div>
               )}
             </Card>
           </div>
