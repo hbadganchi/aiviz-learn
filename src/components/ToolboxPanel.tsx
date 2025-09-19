@@ -105,6 +105,28 @@ export const ToolboxPanel = ({ currentTool, onToolChange }: ToolboxPanelProps) =
 
         <Separator />
 
+        {/* Shapes */}
+        <div className="space-y-2">
+          <h4 className="text-sm font-medium text-foreground">Shapes</h4>
+          <div className="grid grid-cols-2 gap-2">
+            {shapes.map((shape) => {
+              const Icon = shape.icon;
+              return (
+                <Button
+                  key={shape.name}
+                  variant="outline"
+                  size="sm"
+                  className="interactive hover:bg-accent hover:text-accent-foreground"
+                >
+                  <Icon className="w-4 h-4" />
+                </Button>
+              );
+            })}
+          </div>
+        </div>
+
+        <Separator />
+
         {/* Utilities */}
         <div className="space-y-2">
           <h4 className="text-sm font-medium text-foreground">Utilities</h4>
