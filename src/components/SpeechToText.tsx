@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Mic, MicOff, Volume2 } from "lucide-react";
+import { Mic, MicOff, Volume2, Pause, Play } from "lucide-react";
 import { toast } from "sonner";
 
 interface SpeechToTextProps {
@@ -10,6 +10,7 @@ interface SpeechToTextProps {
 
 export const SpeechToText = ({ onSpeechResult }: SpeechToTextProps) => {
   const [isListening, setIsListening] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
   const [transcript, setTranscript] = useState('');
   const [isSupported, setIsSupported] = useState(false);
   const recognitionRef = useRef<SpeechRecognition | null>(null);
@@ -79,11 +80,27 @@ export const SpeechToText = ({ onSpeechResult }: SpeechToTextProps) => {
     if (isListening) {
       recognitionRef.current?.stop();
       setIsListening(false);
+      setIsPaused(false);
     } else {
       setTranscript('');
       recognitionRef.current?.start();
       setIsListening(true);
+      setIsPaused(false);
       toast.info("Listening... Speak now");
+    }
+  };
+
+  const togglePause = () => {
+    if (!isSupported || !isListening) return;
+
+    if (isPaused) {
+      recognitionRef.current?.start();
+      setIsPaused(false);
+      toast.info("Resumed listening");
+    } else {
+      recognitionRef.current?.stop();
+      setIsPaused(true);
+      toast.info("Paused listening");
     }
   };
 
@@ -110,30 +127,53 @@ export const SpeechToText = ({ onSpeechResult }: SpeechToTextProps) => {
         </Card>
       )}
       
-      <Button
-        onClick={toggleListening}
-        variant={isListening ? "destructive" : "default"}
-        size="lg"
-        className={`
-          interactive shadow-medium min-w-[140px]
-          ${isListening 
-            ? 'bg-destructive hover:bg-destructive/90 animate-pulse' 
-            : 'bg-gradient-primary hover:bg-primary-hover'
-          }
-        `}
-      >
-        {isListening ? (
-          <>
-            <MicOff className="w-5 h-5 mr-2" />
-            Stop Listening
-          </>
-        ) : (
-          <>
-            <Mic className="w-5 h-5 mr-2" />
-            Start Listening
-          </>
+      <div className="flex gap-2">
+        <Button
+          onClick={toggleListening}
+          variant={isListening ? "destructive" : "default"}
+          size="lg"
+          className={`
+            interactive shadow-medium min-w-[140px]
+            ${isListening 
+              ? 'bg-destructive hover:bg-destructive/90' + (isPaused ? '' : ' animate-pulse')
+              : 'bg-gradient-primary hover:bg-primary-hover'
+            }
+          `}
+        >
+          {isListening ? (
+            <>
+              <MicOff className="w-5 h-5 mr-2" />
+              Stop Listening
+            </>
+          ) : (
+            <>
+              <Mic className="w-5 h-5 mr-2" />
+              Start Listening
+            </>
+          )}
+        </Button>
+        
+        {isListening && (
+          <Button
+            onClick={togglePause}
+            variant="outline"
+            size="lg"
+            className="interactive shadow-medium"
+          >
+            {isPaused ? (
+              <>
+                <Play className="w-5 h-5 mr-2" />
+                Resume
+              </>
+            ) : (
+              <>
+                <Pause className="w-5 h-5 mr-2" />
+                Pause
+              </>
+            )}
+          </Button>
         )}
-      </Button>
+      </div>
     </div>
   );
 };

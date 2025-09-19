@@ -2,9 +2,8 @@ import { useState } from "react";
 import { SpeechToText } from "@/components/SpeechToText";
 import { DrawingCanvas } from "@/components/DrawingCanvas";
 import { ToolboxPanel } from "@/components/ToolboxPanel";
-import { NotesPanel } from "@/components/NotesPanel";
-import { AIImageGenerator } from "@/components/AIImageGenerator";
 import { MicrophoneTool } from "@/components/MicrophoneTool";
+import { UnifiedToolsPanel } from "@/components/UnifiedToolsPanel";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Moon, Sun } from "lucide-react";
@@ -72,7 +71,7 @@ const Index = () => {
 
           {/* Main Canvas Area */}
           <div className="col-span-7">
-            <Card className="h-full shadow-medium overflow-hidden">
+            <Card className="h-full shadow-medium overflow-hidden relative">
               {currentTool === 'mic' ? (
                 <MicrophoneTool 
                   onTranscriptChange={handleSpeechResult}
@@ -84,21 +83,31 @@ const Index = () => {
                   className="w-full h-full"
                 />
               )}
+              
+              {/* Speech-to-Text Direct Display */}
+              {transcribedText && currentTool !== 'mic' && (
+                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                  <div className="text-center max-w-4xl px-8">
+                    <p className="text-4xl font-bold text-foreground leading-relaxed">
+                      {transcribedText}
+                    </p>
+                    <p className="text-muted-foreground text-lg mt-4">
+                      {new Date().toLocaleTimeString()}
+                    </p>
+                  </div>
+                </div>
+              )}
             </Card>
           </div>
 
-          {/* Right Sidebar - AI & Notes */}
-          <div className="col-span-3 space-y-4">
-            <AIImageGenerator 
-              speechText={transcribedText}
-              onImageGenerated={handleImageGenerated}
-              generatedImages={generatedImages}
-            />
-            
-            <NotesPanel 
+          {/* Right Sidebar - Unified Tools */}
+          <div className="col-span-3">
+            <UnifiedToolsPanel
+              transcribedText={transcribedText}
               notes={notes}
               onNotesChange={setNotes}
-              transcribedText={transcribedText}
+              generatedImages={generatedImages}
+              onImageGenerated={handleImageGenerated}
             />
           </div>
         </div>
