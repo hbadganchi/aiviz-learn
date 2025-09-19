@@ -6,10 +6,9 @@ import { toast } from "sonner";
 interface DrawingCanvasProps {
   currentTool: 'pen' | 'eraser' | 'shapes' | 'mic';
   className?: string;
-  transcribedText?: string;
 }
 
-export const DrawingCanvas = ({ currentTool, className, transcribedText }: DrawingCanvasProps) => {
+export const DrawingCanvas = ({ currentTool, className }: DrawingCanvasProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const contextRef = useRef<CanvasRenderingContext2D | null>(null);
   const [isDrawing, setIsDrawing] = useState(false);
@@ -47,12 +46,6 @@ export const DrawingCanvas = ({ currentTool, className, transcribedText }: Drawi
       contextRef.current.globalCompositeOperation = currentTool === 'eraser' ? 'destination-out' : 'source-over';
     }
   }, [currentTool, strokeColor, strokeWidth]);
-
-  useEffect(() => {
-    if (transcribedText && transcribedText.trim()) {
-      drawTextOnCanvas(transcribedText);
-    }
-  }, [transcribedText]);
 
   const startDrawing = (event: React.MouseEvent<HTMLCanvasElement>) => {
     if (!contextRef.current) return;
@@ -95,36 +88,6 @@ export const DrawingCanvas = ({ currentTool, className, transcribedText }: Drawi
     contextRef.current.fillStyle = '#ffffff';
     contextRef.current.fillRect(0, 0, canvasRef.current.width, canvasRef.current.height);
     toast.success("Canvas cleared!");
-  };
-
-  const drawTextOnCanvas = (text: string) => {
-    if (!contextRef.current || !canvasRef.current) return;
-    
-    const context = contextRef.current;
-    const canvas = canvasRef.current;
-    
-    // Clear the canvas first
-    context.fillStyle = '#ffffff';
-    context.fillRect(0, 0, canvas.width, canvas.height);
-    
-    // Set text properties
-    context.fillStyle = '#1f2937';
-    context.font = 'bold 32px system-ui, -apple-system, sans-serif';
-    context.textAlign = 'center';
-    context.textBaseline = 'middle';
-    
-    // Calculate canvas center
-    const rect = canvas.getBoundingClientRect();
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
-    
-    // Draw the text
-    context.fillText(text, centerX, centerY);
-    
-    // Draw timestamp
-    context.font = '16px system-ui, -apple-system, sans-serif';
-    context.fillStyle = '#6b7280';
-    context.fillText(new Date().toLocaleTimeString(), centerX, centerY + 50);
   };
 
   const downloadCanvas = () => {
