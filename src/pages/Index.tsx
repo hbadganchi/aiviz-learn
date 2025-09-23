@@ -12,17 +12,11 @@ import { useTheme } from "next-themes";
 const Index = () => {
   const [currentTool, setCurrentTool] = useState<'pen' | 'eraser' | 'shapes' | 'mic'>('pen');
   const [transcribedText, setTranscribedText] = useState<string>('');
-  const [notes, setNotes] = useState<string[]>([]);
   const [generatedImages, setGeneratedImages] = useState<string[]>([]);
   const { theme, setTheme } = useTheme();
 
   const handleSpeechResult = (text: string) => {
     setTranscribedText(text);
-    // Auto-generate notes from speech
-    if (text.length > 20) {
-      const newNote = `📝 ${new Date().toLocaleTimeString()}: ${text}`;
-      setNotes(prev => [...prev, newNote]);
-    }
   };
 
   const handleImageGenerated = (imageUrl: string) => {
@@ -104,8 +98,6 @@ const Index = () => {
           <div className="col-span-3">
             <UnifiedToolsPanel
               transcribedText={transcribedText}
-              notes={notes}
-              onNotesChange={setNotes}
               generatedImages={generatedImages}
               onImageGenerated={handleImageGenerated}
             />
