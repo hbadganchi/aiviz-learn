@@ -6,20 +6,7 @@ import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
-import { 
-  StickyNote, 
-  Plus, 
-  Trash2, 
-  Download,
-  Upload,
-  Edit3,
-  Pin,
-  PinOff,
-  Save,
-  X,
-  FileText,
-  FilePdf
-} from "lucide-react";
+import { StickyNote, Plus, Trash2, Download, Upload, Edit3, Pin, PinOff, Save, X, FileText, File as FilePdf } from "lucide-react";
 import { toast } from "sonner";
 
 interface Note {
