@@ -5,11 +5,15 @@ import { NotesSection } from "@/components/NotesSection";
 import { PeriodicTable } from "@/components/PeriodicTable";
 import { ScientificCalculator } from "@/components/ScientificCalculator";
 import { AIImageGenerator } from "@/components/AIImageGenerator";
+import { StopwatchWidget } from "@/components/StopwatchWidget";
+import { BooksLibrary } from "@/components/BooksLibrary";
 import { 
   StickyNote,
   Atom,
   Calculator, 
   Wand2, 
+  Timer,
+  BookOpen
 } from "lucide-react";
 
 interface UnifiedToolsPanelProps {
@@ -29,22 +33,30 @@ export const UnifiedToolsPanel = ({
     <Card className={`shadow-medium h-full ${className}`}>
       <Tabs defaultValue="books" className="h-full flex flex-col">
         <div className="p-4 pb-0">
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-6">
             <TabsTrigger value="notes" className="flex items-center gap-2">
               <StickyNote className="w-4 h-4" />
-              <span className="hidden sm:inline">Notes</span>
+              <span className="sr-only">Notes</span>
             </TabsTrigger>
             <TabsTrigger value="periodic" className="flex items-center gap-2">
               <Atom className="w-4 h-4" />
-              <span className="hidden sm:inline">Elements</span>
+              <span className="sr-only">Elements</span>
             </TabsTrigger>
             <TabsTrigger value="calculator" className="flex items-center gap-2">
               <Calculator className="w-4 h-4" />
-              <span className="hidden sm:inline">Calc</span>
+              <span className="sr-only">Calculator</span>
             </TabsTrigger>
             <TabsTrigger value="ai" className="flex items-center gap-2">
               <Wand2 className="w-4 h-4" />
-              <span className="hidden sm:inline">AI</span>
+              <span className="sr-only">AI</span>
+            </TabsTrigger>
+            <TabsTrigger value="timer" className="flex items-center gap-2">
+              <Timer className="w-4 h-4" />
+              <span className="sr-only">Timer</span>
+            </TabsTrigger>
+            <TabsTrigger value="books" className="flex items-center gap-2">
+              <BookOpen className="w-4 h-4" />
+              <span className="sr-only">Books</span>
             </TabsTrigger>
           </TabsList>
         </div>
@@ -75,6 +87,18 @@ export const UnifiedToolsPanel = ({
                 onImageGenerated={onImageGenerated}
                 generatedImages={generatedImages}
               />
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="timer" className="h-full m-0 p-4 pt-0">
+            <div className="h-full">
+              <StopwatchWidget className="h-full border-0 shadow-none" />
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="books" className="h-full m-0 p-4 pt-0">
+            <div className="h-full">
+              <BooksLibrary className="h-full border-0 shadow-none" />
             </div>
           </TabsContent>
         </div>
