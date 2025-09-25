@@ -8,20 +8,7 @@ import { Switch } from "@/components/ui/switch";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { 
-  StickyNote, 
-  BookOpen, 
-  Sync, 
-  Plus, 
-  Edit3, 
-  Trash2, 
-  Save,
-  X,
-  AlertTriangle,
-  Check,
-  Clock,
-  Tag
-} from "lucide-react";
+import { StickyNote, BookOpen, FolderSync as Sync, Plus, Edit3, Trash2, Save, X, AlertTriangle, Check, Clock, Tag } from "lucide-react";
 import { toast } from "sonner";
 
 interface Note {
