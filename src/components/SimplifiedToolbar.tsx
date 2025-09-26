@@ -2,12 +2,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Slider } from "@/components/ui/slider";
-import { 
-  Brush,
-  Grid3X3,
-  RotateCcw,
-  Palette
-} from "lucide-react";
+import { Brush, Grid3x3 as Grid3X3, RotateCcw, Palette } from "lucide-react";
 import { toast } from "sonner";
 
 interface SimplifiedToolbarProps {
