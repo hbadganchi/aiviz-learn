@@ -1,27 +1,26 @@
 import { useState } from "react";
 import { SpeechToText } from "@/components/SpeechToText";
 import { DrawingCanvas } from "@/components/DrawingCanvas";
-import { QuickToolsPanel } from "@/components/QuickToolsPanel";
+import { ToolboxPanel } from "@/components/ToolboxPanel";
 import { MicrophoneTool } from "@/components/MicrophoneTool";
-import { NotesSection } from "@/components/NotesSection";
-import { ScientificCalculator } from "@/components/ScientificCalculator";
-import { StopwatchWidget } from "@/components/StopwatchWidget";
+import { UnifiedToolsPanel } from "@/components/UnifiedToolsPanel";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Moon, Sun, Settings, Menu } from "lucide-react";
+import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 
 const Index = () => {
-  const [currentTool, setCurrentTool] = useState<'pen' | 'eraser' | 'mic'>('pen');
+  const [currentTool, setCurrentTool] = useState<'pen' | 'eraser' | 'shapes' | 'mic'>('pen');
   const [transcribedText, setTranscribedText] = useState<string>('');
-  const [isLocked, setIsLocked] = useState(false);
-  const [showGrid, setShowGrid] = useState(false);
-  const [activeTab, setActiveTab] = useState('notes');
+  const [generatedImages, setGeneratedImages] = useState<string[]>([]);
   const { theme, setTheme } = useTheme();
 
   const handleSpeechResult = (text: string) => {
     setTranscribedText(text);
+  };
+
+  const handleImageGenerated = (imageUrl: string) => {
+    setGeneratedImages(prev => [...prev, imageUrl]);
   };
 
   return (
@@ -38,39 +37,7 @@ const Index = () => {
               <p className="text-muted-foreground text-sm">Interactive AI-Powered Classroom</p>
             </div>
           </div>
-          
-          {/* Top Navigation */}
-          <nav className="hidden md:flex items-center gap-1 bg-muted rounded-xl p-1">
-            <Button
-              variant={activeTab === 'notes' ? 'default' : 'ghost'}
-              size="sm"
-              onClick={() => setActiveTab('notes')}
-              className="rounded-lg"
-            >
-              Notes
-            </Button>
-            <Button
-              variant={activeTab === 'calculator' ? 'default' : 'ghost'}
-              size="sm"
-              onClick={() => setActiveTab('calculator')}
-              className="rounded-lg"
-            >
-              Calculator
-            </Button>
-            <Button
-              variant={activeTab === 'timer' ? 'default' : 'ghost'}
-              size="sm"
-              onClick={() => setActiveTab('timer')}
-              className="rounded-lg"
-            >
-              Timer
-            </Button>
-          </nav>
-          
           <div className="flex items-center gap-4">
-            <Button variant="outline" size="icon" className="md:hidden">
-              <Menu className="h-[1.2rem] w-[1.2rem]" />
-            </Button>
             <Button
               variant="outline"
               size="icon"
@@ -81,31 +48,24 @@ const Index = () => {
               <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
               <span className="sr-only">Toggle theme</span>
             </Button>
-            <Button variant="outline" size="icon">
-              <Settings className="h-[1.2rem] w-[1.2rem]" />
-            </Button>
             <SpeechToText onSpeechResult={handleSpeechResult} />
           </div>
         </div>
       </header>
 
-      {/* Quick Tools Panel */}
-      <div className="max-w-7xl mx-auto px-4 py-4">
-        <QuickToolsPanel
-          currentTool={currentTool}
-          onToolChange={setCurrentTool}
-          isLocked={isLocked}
-          onToggleLock={() => setIsLocked(!isLocked)}
-          showGrid={showGrid}
-          onToggleGrid={() => setShowGrid(!showGrid)}
-        />
-      </div>
-
       <div className="max-w-7xl mx-auto p-4">
-        <div className="grid grid-cols-12 gap-6 h-[calc(100vh-200px)]">
+        <div className="grid grid-cols-12 gap-6 h-[calc(100vh-120px)]">
+          {/* Left Sidebar - Tools */}
+          <div className="col-span-2">
+            <ToolboxPanel 
+              currentTool={currentTool} 
+              onToolChange={setCurrentTool}
+            />
+          </div>
+
           {/* Main Canvas Area */}
-          <div className="col-span-8">
-            <Card className={`h-full shadow-medium overflow-hidden relative ${showGrid ? 'canvas-grid' : ''}`}>
+          <div className="col-span-7">
+            <Card className="h-full shadow-medium overflow-hidden relative">
               {currentTool === 'mic' ? (
                 <MicrophoneTool 
                   onTranscriptChange={handleSpeechResult}
@@ -134,27 +94,13 @@ const Index = () => {
             </Card>
           </div>
 
-          {/* Right Sidebar - Tools Panel */}
-          <div className="col-span-4">
-            <Tabs value={activeTab} onValueChange={setActiveTab} className="h-full">
-              <TabsList className="grid w-full grid-cols-3 mb-4">
-                <TabsTrigger value="notes">Notes</TabsTrigger>
-                <TabsTrigger value="calculator">Calculator</TabsTrigger>
-                <TabsTrigger value="timer">Timer</TabsTrigger>
-              </TabsList>
-              
-              <TabsContent value="notes" className="h-full mt-0">
-                <NotesSection className="h-full" />
-              </TabsContent>
-              
-              <TabsContent value="calculator" className="h-full mt-0">
-                <ScientificCalculator className="h-full" />
-              </TabsContent>
-              
-              <TabsContent value="timer" className="h-full mt-0">
-                <StopwatchWidget className="h-full" />
-              </TabsContent>
-            </Tabs>
+          {/* Right Sidebar - Unified Tools */}
+          <div className="col-span-3">
+            <UnifiedToolsPanel
+              transcribedText={transcribedText}
+              generatedImages={generatedImages}
+              onImageGenerated={handleImageGenerated}
+            />
           </div>
         </div>
       </div>

@@ -4,7 +4,7 @@ import { RotateCcw, Download } from "lucide-react";
 import { toast } from "sonner";
 
 interface DrawingCanvasProps {
-  currentTool: 'pen' | 'eraser' | 'mic';
+  currentTool: 'pen' | 'eraser' | 'shapes' | 'mic';
   className?: string;
 }
 
@@ -48,8 +48,6 @@ export const DrawingCanvas = ({ currentTool, className }: DrawingCanvasProps) =>
   }, [currentTool, strokeColor, strokeWidth]);
 
   const startDrawing = (event: React.MouseEvent<HTMLCanvasElement>) => {
-    if (currentTool === 'mic') return;
-    
     if (!contextRef.current) return;
     
     const canvas = canvasRef.current;
@@ -65,8 +63,6 @@ export const DrawingCanvas = ({ currentTool, className }: DrawingCanvasProps) =>
   };
 
   const draw = (event: React.MouseEvent<HTMLCanvasElement>) => {
-    if (currentTool === 'mic') return;
-    
     if (!isDrawing || !contextRef.current) return;
 
     const canvas = canvasRef.current;
@@ -81,8 +77,6 @@ export const DrawingCanvas = ({ currentTool, className }: DrawingCanvasProps) =>
   };
 
   const stopDrawing = () => {
-    if (currentTool === 'mic') return;
-    
     if (!contextRef.current) return;
     contextRef.current.closePath();
     setIsDrawing(false);
@@ -109,45 +103,43 @@ export const DrawingCanvas = ({ currentTool, className }: DrawingCanvasProps) =>
   return (
     <div className={`relative ${className}`}>
       {/* Canvas Controls */}
-      {currentTool !== 'mic' && (
-        <div className="absolute top-4 right-4 z-10 flex gap-2">
-          <div className="flex items-center gap-2 bg-card/90 backdrop-blur-sm rounded-lg p-2 shadow-soft">
-            <input
-              type="color"
-              value={strokeColor}
-              onChange={(e) => setStrokeColor(e.target.value)}
-              className="w-8 h-8 rounded border-0 cursor-pointer"
-              disabled={currentTool === 'eraser'}
-            />
-            <input
-              type="range"
-              min="1"
-              max="20"
-              value={strokeWidth}
-              onChange={(e) => setStrokeWidth(Number(e.target.value))}
-              className="w-20"
-            />
-          </div>
-        
-          <Button
-            onClick={clearCanvas}
-            variant="outline"
-            size="icon"
-            className="interactive"
-          >
-            <RotateCcw className="w-4 h-4" />
-          </Button>
-        
-          <Button
-            onClick={downloadCanvas}
-            variant="outline"
-            size="icon"
-            className="interactive"
-          >
-            <Download className="w-4 h-4" />
-          </Button>
+      <div className="absolute top-4 right-4 z-10 flex gap-2">
+        <div className="flex items-center gap-2 bg-card/90 backdrop-blur-sm rounded-lg p-2 shadow-soft">
+          <input
+            type="color"
+            value={strokeColor}
+            onChange={(e) => setStrokeColor(e.target.value)}
+            className="w-8 h-8 rounded border-0 cursor-pointer"
+            disabled={currentTool === 'eraser'}
+          />
+          <input
+            type="range"
+            min="1"
+            max="20"
+            value={strokeWidth}
+            onChange={(e) => setStrokeWidth(Number(e.target.value))}
+            className="w-20"
+          />
         </div>
-      )}
+        
+        <Button
+          onClick={clearCanvas}
+          variant="outline"
+          size="icon"
+          className="interactive"
+        >
+          <RotateCcw className="w-4 h-4" />
+        </Button>
+        
+        <Button
+          onClick={downloadCanvas}
+          variant="outline"
+          size="icon"
+          className="interactive"
+        >
+          <Download className="w-4 h-4" />
+        </Button>
+      </div>
 
       {/* Drawing Canvas */}
       <canvas
@@ -156,31 +148,27 @@ export const DrawingCanvas = ({ currentTool, className }: DrawingCanvasProps) =>
         onMouseMove={draw}
         onMouseUp={stopDrawing}
         onMouseLeave={stopDrawing}
-        className={`w-full h-full bg-canvas rounded-lg ${
-          currentTool === 'mic' ? 'cursor-default' : 'cursor-crosshair'
-        }`}
+        className="w-full h-full cursor-crosshair canvas-grid bg-canvas rounded-lg"
         style={{
-          cursor: currentTool === 'mic' ? 'default' : currentTool === 'eraser' ? 'grab' : 'crosshair'
+          cursor: currentTool === 'eraser' ? 'grab' : 'crosshair'
         }}
       />
 
       {/* Tool Indicator */}
-      {currentTool !== 'mic' && (
-        <div className="absolute bottom-4 left-4 bg-card/90 backdrop-blur-sm rounded-lg p-3 shadow-soft">
-          <p className="text-sm font-medium text-foreground">
-            Current Tool: <span className="text-primary capitalize">{currentTool}</span>
-          </p>
-          {currentTool === 'pen' && (
-            <div className="flex items-center gap-2 mt-1">
-              <div 
-                className="w-4 h-4 rounded-full" 
-                style={{ backgroundColor: strokeColor }}
-              />
-              <span className="text-xs text-muted-foreground">{strokeWidth}px</span>
-            </div>
-          )}
-        </div>
-      )}
+      <div className="absolute bottom-4 left-4 bg-card/90 backdrop-blur-sm rounded-lg p-3 shadow-soft">
+        <p className="text-sm font-medium text-foreground">
+          Current Tool: <span className="text-primary capitalize">{currentTool}</span>
+        </p>
+        {currentTool === 'pen' && (
+          <div className="flex items-center gap-2 mt-1">
+            <div 
+              className="w-4 h-4 rounded-full" 
+              style={{ backgroundColor: strokeColor }}
+            />
+            <span className="text-xs text-muted-foreground">{strokeWidth}px</span>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
