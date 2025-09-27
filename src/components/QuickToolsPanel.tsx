@@ -3,27 +3,16 @@ import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { 
   Pen, 
-  Highlighter, 
   Eraser, 
-  Square, 
-  Type,
-  StickyNote,
-  Timer,
-  Atom,
-  Upload,
-  Download,
+  Mic,
   Lock,
   Unlock,
-  Group,
-  Ungroup,
-  Wand2,
-  Grid3X3,
-  MessageSquare
+  Grid3X3
 } from "lucide-react";
 
 interface QuickToolsPanelProps {
-  currentTool: string;
-  onToolChange: (tool: string) => void;
+  currentTool: 'pen' | 'eraser' | 'mic';
+  onToolChange: (tool: 'pen' | 'eraser' | 'mic') => void;
   isLocked: boolean;
   onToggleLock: () => void;
   showGrid: boolean;
@@ -42,19 +31,8 @@ export const QuickToolsPanel = ({
 
   const quickTools = [
     { id: 'pen', icon: Pen, label: 'Pen Tool', shortcut: 'P' },
-    { id: 'highlighter', icon: Highlighter, label: 'Highlighter', shortcut: 'H' },
     { id: 'eraser', icon: Eraser, label: 'Eraser', shortcut: 'E' },
-    { id: 'shapes', icon: Square, label: 'Shapes', shortcut: 'S' },
-    { id: 'text', icon: Type, label: 'Text Tool', shortcut: 'T' },
-    { id: 'sticky', icon: StickyNote, label: 'Sticky Notes', shortcut: 'N' },
-    { id: 'timer', icon: Timer, label: 'Stopwatch', shortcut: 'W' },
-    { id: 'periodic', icon: Atom, label: 'Periodic Table', shortcut: 'A' },
-    { id: 'upload', icon: Upload, label: 'Upload', shortcut: 'U' },
-    { id: 'download', icon: Download, label: 'Download', shortcut: 'D' },
-    { id: 'group', icon: Group, label: 'Group', shortcut: 'G' },
-    { id: 'ungroup', icon: Ungroup, label: 'Ungroup', shortcut: 'Shift+G' },
-    { id: 'magic', icon: Wand2, label: 'Magic Select', shortcut: 'M' },
-    { id: 'ai-chat', icon: MessageSquare, label: 'AI Chat', shortcut: 'C' }
+    { id: 'mic', icon: Mic, label: 'Voice Tool', shortcut: 'M' }
   ];
 
   const handleToolClick = (toolId: string) => {
@@ -65,7 +43,7 @@ export const QuickToolsPanel = ({
       console.warn('Tool response exceeded 100ms threshold');
     }
     
-    onToolChange(toolId);
+    onToolChange(toolId as 'pen' | 'eraser' | 'mic');
   };
 
   return (

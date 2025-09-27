@@ -2,12 +2,10 @@ import { useState } from "react";
 import { SpeechToText } from "@/components/SpeechToText";
 import { DrawingCanvas } from "@/components/DrawingCanvas";
 import { QuickToolsPanel } from "@/components/QuickToolsPanel";
-import { ExpandedToolsBox } from "@/components/ExpandedToolsBox";
 import { MicrophoneTool } from "@/components/MicrophoneTool";
-import { FullPeriodicTable } from "@/components/FullPeriodicTable";
-import { LogTable } from "@/components/LogTable";
-import { EnhancedEraserTool } from "@/components/EnhancedEraserTool";
-import { SmartNotesLibrarySync } from "@/components/SmartNotesLibrarySync";
+import { NotesSection } from "@/components/NotesSection";
+import { ScientificCalculator } from "@/components/ScientificCalculator";
+import { StopwatchWidget } from "@/components/StopwatchWidget";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -15,40 +13,15 @@ import { Moon, Sun, Settings, Menu } from "lucide-react";
 import { useTheme } from "next-themes";
 
 const Index = () => {
-  const [currentTool, setCurrentTool] = useState<'pen' | 'eraser' | 'shapes' | 'mic'>('pen');
+  const [currentTool, setCurrentTool] = useState<'pen' | 'eraser' | 'mic'>('pen');
   const [transcribedText, setTranscribedText] = useState<string>('');
-  const [generatedImages, setGeneratedImages] = useState<string[]>([]);
   const [isLocked, setIsLocked] = useState(false);
   const [showGrid, setShowGrid] = useState(false);
-  const [eraserMode, setEraserMode] = useState<'stroke' | 'shape' | 'pixel'>('stroke');
-  const [eraserSize, setEraserSize] = useState(20);
-  const [activeTab, setActiveTab] = useState('tools');
-  const [isLogDocked, setIsLogDocked] = useState(false);
+  const [activeTab, setActiveTab] = useState('notes');
   const { theme, setTheme } = useTheme();
-
-  // Mock layers data for eraser tool
-  const mockLayers = [
-    { id: 'bg', name: 'Background', isLocked: true, isVisible: true, objects: [] },
-    { id: 'main', name: 'Main Layer', isLocked: false, isVisible: true, objects: [] },
-    { id: 'overlay', name: 'Overlay', isLocked: false, isVisible: true, objects: [] }
-  ];
 
   const handleSpeechResult = (text: string) => {
     setTranscribedText(text);
-  };
-
-  const handleImageGenerated = (imageUrl: string) => {
-    setGeneratedImages(prev => [...prev, imageUrl]);
-  };
-
-  const handleElementSelect = (element: any) => {
-    console.log('Element selected:', element);
-    // Add element to canvas logic here
-  };
-
-  const handleObjectErase = (objectId: string) => {
-    console.log('Erasing object:', objectId);
-    // Erase object logic here
   };
 
   return (
@@ -69,14 +42,6 @@ const Index = () => {
           {/* Top Navigation */}
           <nav className="hidden md:flex items-center gap-1 bg-muted rounded-xl p-1">
             <Button
-              variant={activeTab === 'tools' ? 'default' : 'ghost'}
-              size="sm"
-              onClick={() => setActiveTab('tools')}
-              className="rounded-lg"
-            >
-              Tools
-            </Button>
-            <Button
               variant={activeTab === 'notes' ? 'default' : 'ghost'}
               size="sm"
               onClick={() => setActiveTab('notes')}
@@ -85,20 +50,20 @@ const Index = () => {
               Notes
             </Button>
             <Button
-              variant={activeTab === 'library' ? 'default' : 'ghost'}
+              variant={activeTab === 'calculator' ? 'default' : 'ghost'}
               size="sm"
-              onClick={() => setActiveTab('library')}
+              onClick={() => setActiveTab('calculator')}
               className="rounded-lg"
             >
-              Library
+              Calculator
             </Button>
             <Button
-              variant={activeTab === 'logs' ? 'default' : 'ghost'}
+              variant={activeTab === 'timer' ? 'default' : 'ghost'}
               size="sm"
-              onClick={() => setActiveTab('logs')}
+              onClick={() => setActiveTab('timer')}
               className="rounded-lg"
             >
-              Logs
+              Timer
             </Button>
           </nav>
           
@@ -138,38 +103,8 @@ const Index = () => {
 
       <div className="max-w-7xl mx-auto p-4">
         <div className="grid grid-cols-12 gap-6 h-[calc(100vh-200px)]">
-          {/* Left Sidebar - Tools */}
-          <div className="col-span-2">
-            <Tabs value={activeTab} onValueChange={setActiveTab} className="h-full">
-              <TabsList className="grid w-full grid-cols-2 mb-4">
-                <TabsTrigger value="tools">Tools</TabsTrigger>
-                <TabsTrigger value="eraser">Eraser</TabsTrigger>
-              </TabsList>
-              
-              <TabsContent value="tools" className="h-full mt-0">
-                <ExpandedToolsBox
-                  currentTool={currentTool}
-                  onToolChange={setCurrentTool}
-                  className="h-full"
-                />
-              </TabsContent>
-              
-              <TabsContent value="eraser" className="h-full mt-0">
-                <EnhancedEraserTool
-                  currentMode={eraserMode}
-                  onModeChange={setEraserMode}
-                  eraserSize={eraserSize}
-                  onSizeChange={setEraserSize}
-                  layers={mockLayers}
-                  onObjectErase={handleObjectErase}
-                  className="h-full"
-                />
-              </TabsContent>
-            </Tabs>
-          </div>
-
           {/* Main Canvas Area */}
-          <div className="col-span-7">
+          <div className="col-span-8">
             <Card className={`h-full shadow-medium overflow-hidden relative ${showGrid ? 'canvas-grid' : ''}`}>
               {currentTool === 'mic' ? (
                 <MicrophoneTool 
@@ -199,50 +134,30 @@ const Index = () => {
             </Card>
           </div>
 
-          {/* Right Sidebar - Contextual Panels */}
-          <div className="col-span-3">
+          {/* Right Sidebar - Tools Panel */}
+          <div className="col-span-4">
             <Tabs value={activeTab} onValueChange={setActiveTab} className="h-full">
-              <TabsList className="grid w-full grid-cols-4 mb-4">
-                <TabsTrigger value="tools">Tools</TabsTrigger>
+              <TabsList className="grid w-full grid-cols-3 mb-4">
                 <TabsTrigger value="notes">Notes</TabsTrigger>
-                <TabsTrigger value="library">Library</TabsTrigger>
-                <TabsTrigger value="logs">Logs</TabsTrigger>
+                <TabsTrigger value="calculator">Calculator</TabsTrigger>
+                <TabsTrigger value="timer">Timer</TabsTrigger>
               </TabsList>
               
-              <TabsContent value="tools" className="h-full mt-0">
-                <FullPeriodicTable
-                  onElementSelect={handleElementSelect}
-                  className="h-full"
-                />
-              </TabsContent>
-              
               <TabsContent value="notes" className="h-full mt-0">
-                <SmartNotesLibrarySync className="h-full" />
+                <NotesSection className="h-full" />
               </TabsContent>
               
-              <TabsContent value="library" className="h-full mt-0">
-                <SmartNotesLibrarySync className="h-full" />
+              <TabsContent value="calculator" className="h-full mt-0">
+                <ScientificCalculator className="h-full" />
               </TabsContent>
               
-              <TabsContent value="logs" className="h-full mt-0">
-                <LogTable
-                  className="h-full"
-                  isDocked={isLogDocked}
-                  onToggleDock={() => setIsLogDocked(!isLogDocked)}
-                />
+              <TabsContent value="timer" className="h-full mt-0">
+                <StopwatchWidget className="h-full" />
               </TabsContent>
             </Tabs>
           </div>
         </div>
       </div>
-      
-      {/* Docked Log Table */}
-      {isLogDocked && (
-        <LogTable
-          isDocked={true}
-          onToggleDock={() => setIsLogDocked(false)}
-        />
-      )}
     </div>
   );
 };
