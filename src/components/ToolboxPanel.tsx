@@ -94,7 +94,8 @@ export const ToolboxPanel = ({ currentTool, onToolChange }: ToolboxPanelProps) =
                 >
                   <Icon className="w-4 h-4 mr-3" />
                   <div className="text-left">
-                    <div className="font-medium text-xs">{tool.name}</div>
+                    <div className="font-medium">{tool.name}</div>
+                    <div className="text-xs opacity-70">{tool.description}</div>
                   </div>
                 </Button>
               );
@@ -106,7 +107,7 @@ export const ToolboxPanel = ({ currentTool, onToolChange }: ToolboxPanelProps) =
 
         {/* Utilities */}
         <div className="space-y-2">
-          <h4 className="text-sm font-medium text-foreground">Quick Tools</h4>
+          <h4 className="text-sm font-medium text-foreground">Utilities</h4>
           <div className="grid grid-cols-2 gap-2">
             {utilities.map((utility) => {
               const Icon = utility.icon;
@@ -115,7 +116,7 @@ export const ToolboxPanel = ({ currentTool, onToolChange }: ToolboxPanelProps) =
                   key={utility.name}
                   variant="outline"
                   size="sm"
-                  className="interactive hover:bg-secondary h-10 w-10 p-0"
+                  className="interactive hover:bg-secondary"
                   title={utility.name}
                 >
                   <Icon className="w-4 h-4" />
