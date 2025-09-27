@@ -1,14 +1,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { 
-  Pen, 
-  Eraser, 
-  Mic,
-  Lock,
-  Unlock,
-  Grid3X3
-} from "lucide-react";
+import { Pen, Eraser, Mic, Lock, Clock as Unlock, Grid3x3 as Grid3X3 } from "lucide-react";
 
 interface QuickToolsPanelProps {
   currentTool: 'pen' | 'eraser' | 'mic';
